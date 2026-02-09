@@ -5,6 +5,7 @@ LABEL maintainer="Ernesto Serrano <info@ernesto.es>"
 
 USER root
 RUN apk add --no-cache composer php83-posix php83-xmlwriter php83-pecl-redis \
+    php83-ldap php83-pecl-igbinary php83-exif \
     # Remove alpine cache
     && rm -rf /var/cache/apk/*
 
@@ -52,7 +53,8 @@ ENV LANG=en_US.UTF-8 \
     client_max_body_size=50M \
     post_max_size=50M \
     upload_max_filesize=50M \
-    max_input_vars=5000
+    max_input_vars=5000 \
+    memory_limit=256M
 
 # To use a specific Moodle version, set MOODLE_VERSION to git release tag.
 # You can find the list of available tags at:
@@ -75,7 +77,7 @@ COPY --chown=nobody rootfs/ /
 
 USER nobody
 
-ENV MOOSH_URL=https://github.com/tmuras/moosh/archive/refs/tags/1.27.tar.gz
+ENV MOOSH_URL=https://github.com/tmuras/moosh/archive/master.tar.gz
 RUN curl -L "$MOOSH_URL" | tar xz --strip-components=1 -C /opt/moosh/
 
 RUN composer install --no-interaction --no-cache --working-dir=/opt/moosh
